@@ -43,6 +43,7 @@ fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
     .then(response => response.json())
     .then(data => {
         const status = data.data.discord_status;
+
         const statusDot = document.getElementById("discord-status");
         const tooltip = document.getElementById("discord-tooltip");
 
@@ -57,4 +58,49 @@ fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
         } else {
             tooltip.textContent = "Offline";
         }
+
+        const spotify = data.data.spotify;
+
+        const spotifyLabel = document.getElementById("spotify-label");
+        const spotifyCover = document.getElementById("spotify-cover");
+        const spotifySong = document.getElementById("spotify-song");
+        const spotifyArtist = document.getElementById("spotify-artist");
+
+        if (spotify) {
+
+            spotifyLabel.textContent = "CURRENTLY LISTENING";
+
+            spotifyCover.src = spotify.album_art_url;
+            spotifySong.textContent = spotify.song;
+            spotifyArtist.textContent = spotify.artist;
+
+            const spotifyPlay = document.getElementById("spotify-play");
+            spotifyPlay.href = `https://open.spotify.com/track/${spotify.track_id}`;
+
+            // Remember the current song
+            localStorage.setItem("lastSpotifySong", spotify.song);
+            localStorage.setItem("lastSpotifyArtist", spotify.artist);
+            localStorage.setItem("lastSpotifyCover", spotify.album_art_url);
+
+        } else {
+
+            spotifyLabel.textContent = "LAST PLAYED";
+
+            const lastSong = localStorage.getItem("lastSpotifySong");
+            const lastArtist = localStorage.getItem("lastSpotifyArtist");
+            const lastCover = localStorage.getItem("lastSpotifyCover");
+
+
+            const lastTrack = localStorage.getItem("lastSpotifyTrack");
+            if (lastSong) {
+                spotifyCover.src = lastCover;
+                spotifySong.textContent = lastSong;
+                spotifyArtist.textContent = lastArtist;
+                document.getElementById("spotify-play").href =
+                    `https://open.spotify.com/track/${lastTrack}`;
+            }
+        }
+
+
+
     });

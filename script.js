@@ -36,3 +36,25 @@ function typeRole() {
 }
 
 typeRole();
+
+const discordId = "321037704563523584";
+
+fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
+    .then(response => response.json())
+    .then(data => {
+        const status = data.data.discord_status;
+        const statusDot = document.getElementById("discord-status");
+        const tooltip = document.getElementById("discord-tooltip");
+
+        statusDot.className = status;
+
+        if (status === "online") {
+            tooltip.textContent = "Online";
+        } else if (status === "idle") {
+            tooltip.textContent = "Idle";
+        } else if (status === "dnd") {
+            tooltip.textContent = "Do Not Disturb";
+        } else {
+            tooltip.textContent = "Offline";
+        }
+    });

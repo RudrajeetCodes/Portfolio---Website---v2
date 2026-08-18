@@ -50,13 +50,59 @@ fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
         statusDot.className = status;
 
         if (status === "online") {
+
             tooltip.textContent = "Online";
+
+            localStorage.setItem(
+                "discordLastSeen",
+                Date.now()
+            );
+
         } else if (status === "idle") {
+
             tooltip.textContent = "Idle";
+
+            localStorage.setItem(
+                "discordLastSeen",
+                Date.now()
+            );
+
         } else if (status === "dnd") {
+
             tooltip.textContent = "Do Not Disturb";
+
+            localStorage.setItem(
+                "discordLastSeen",
+                Date.now()
+            );
+
         } else {
-            tooltip.textContent = "Offline";
+
+            const lastSeen = localStorage.getItem("discordLastSeen");
+
+            if (lastSeen) {
+                const elapsed = Date.now() - Number(lastSeen);
+                const minutes = Math.floor(elapsed / 60000);
+
+                if (minutes < 1) {
+                    tooltip.textContent = "Offline · Last seen just now";
+                } else if (minutes === 1) {
+                    tooltip.textContent = "Offline · Last seen 1 minute ago";
+                } else if (minutes < 60) {
+                    tooltip.textContent = `Offline · Last seen ${minutes} minutes ago`;
+                } else {
+                    const hours = Math.floor(minutes / 60);
+
+                    if (hours === 1) {
+                        tooltip.textContent = "Offline · Last seen 1 hour ago";
+                    } else {
+                        tooltip.textContent = `Offline · Last seen ${hours} hours ago`;
+                    }
+                }
+
+            } else {
+                tooltip.textContent = "Offline";
+            }
         }
 
         const spotify = data.data.spotify;

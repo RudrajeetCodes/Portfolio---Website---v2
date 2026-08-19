@@ -324,14 +324,14 @@ projects.forEach((project) => {
                 <div class="project-links">
 
                     ${project.live
-                        ? `<a href="${project.live}" target="_blank" rel="noopener noreferrer">↗</a>`
-                        : ""
-                    }
+            ? `<a href="${project.live}" target="_blank" rel="noopener noreferrer">↗</a>`
+            : ""
+        }
 
                     ${project.github
-                        ? `<a href="${project.github}" target="_blank" rel="noopener noreferrer">◈</a>`
-                        : ""
-                    }
+            ? `<a href="${project.github}" target="_blank" rel="noopener noreferrer">◈</a>`
+            : ""
+        }
 
                 </div>
 
@@ -342,3 +342,410 @@ projects.forEach((project) => {
 
     projectsGrid.appendChild(card);
 });
+
+const githubUsername = "RudrajeetCodes";
+
+async function loadGithubContributions() {
+    const graph = document.getElementById("github-graph");
+    const total = document.getElementById("github-total");
+    const months = document.getElementById("github-months");
+    const lastYear = document.getElementById("github-last-year");
+
+    try {
+        const response = await fetch(
+            `https://githubgraph.jigyansurout.com/api/ghcg/fetch-data?login=${githubUsername}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to load GitHub data");
+        }
+
+        const data = await response.json();
+
+        console.log("GitHub data:", data);
+
+        const calendar =
+            data.user.contributionsCollection.contributionCalendar;
+
+        graph.innerHTML = "";
+        months.innerHTML = "";
+
+        // Total
+        total.textContent =
+            calendar.totalContributions.toLocaleString();
+
+        lastYear.textContent =
+            `${calendar.totalContributions.toLocaleString()} contributions in the last year`;
+
+        // Month labels
+        // Month labels
+        let lastMonth = "";
+
+        calendar.weeks.forEach((week, weekIndex) => {
+
+            week.contributionDays.forEach((day) => {
+
+                const date = new Date(day.date + "T00:00:00");
+
+                const month = date.toLocaleString("en-US", {
+                    month: "short"
+                });
+
+                // Add the first month
+                if (weekIndex === 0 && lastMonth === "") {
+
+                    const label = document.createElement("span");
+
+                    label.className = "github-month";
+                    label.textContent = month;
+
+                    const weekWidth = 10;
+                    const weekGap = 4;
+                    const weekStep = weekWidth + weekGap;
+
+                    label.style.left = `${weekIndex * weekStep}px`;
+
+                    months.appendChild(label);
+
+                    lastMonth = month;
+                }
+
+                // Add a label whenever a new month starts
+                else if (date.getDate() === 1 && month !== lastMonth) {
+
+                    const label = document.createElement("span");
+
+                    label.className = "github-month";
+                    label.textContent = month;
+
+                    const weekWidth = 10;
+                    const weekGap = 4;
+                    const weekStep = weekWidth + weekGap;
+
+                    label.style.left = `${weekIndex * weekStep}px`;
+
+                    months.appendChild(label);
+
+                    lastMonth = month;
+                }
+            });
+        });
+
+        // Contribution graph
+        calendar.weeks.forEach((week) => {
+
+            const weekColumn = document.createElement("div");
+
+            weekColumn.className = "github-week";
+
+            week.contributionDays.forEach((day) => {
+
+                const cell = document.createElement("div");
+
+                cell.className = "github-day";
+
+                // GitHub contribution level
+                const levelMap = {
+                    "NONE": 0,
+                    "FIRST_QUARTILE": 1,
+                    "SECOND_QUARTILE": 2,
+                    "THIRD_QUARTILE": 3,
+                    "FOURTH_QUARTILE": 4
+                };
+
+                const level =
+                    levelMap[day.contributionLevel] ?? 0;
+
+                cell.classList.add(`level-${level}`);
+
+                cell.title =
+                    `${day.contributionCount} contributions on ${day.date}`;
+
+                weekColumn.appendChild(cell);
+            });
+
+            graph.appendChild(weekColumn);
+        });
+
+    } catch (error) {
+
+        console.error(
+            "GitHub contribution error:",
+            error
+        );
+    }
+}
+
+loadGithubContributions();
+
+const githubRepo = "Portfolio";
+
+async function loadGithubActivity() {
+    const activityList =
+        document.getElementById("github-activity-list");
+
+    if (!activityList) return;
+
+    activityList.innerHTML = "";
+
+    try {
+        const response = await fetch(
+            `https://api.github.com/users/${githubUsername}/events/public?per_page=100`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to load GitHub activity");
+        }
+
+        const events = await response.json();
+
+        const commits = [];
+
+        events.forEach((event) => {
+            if (event.type !== "PushEvent") return;
+
+            const repoName = event.repo.name;
+
+            event.payload.commits?.forEach((commit) => {
+                commits.push({
+                    message: commit.message,
+                    sha: commit.sha,
+                    repoName: repoName,
+                    date: event.created_at
+                });
+            });
+        });
+
+        // Newest first
+        commits.sort(
+            (a, b) =>
+                new Date(b.date) -
+                new Date(a.date)
+        );
+
+        // Latest 5 commits
+        const latestCommits =
+            commits.slice(0, 5);
+        const commitsTab =
+            document.querySelector(".github-tabs button:first-child span");
+
+        if (commitsTab) {
+            commitsTab.textContent = allCommits.length;
+        }
+
+        if (latestCommits.length === 0) {
+            activityList.innerHTML = `
+                <div class="github-activity-item">
+                    <span class="github-activity-title">
+                        No recent commits found
+                    </span>
+                </div>
+            `;
+
+            return;
+        }
+
+        latestCommits.forEach((commit) => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "github-activity-item";
+
+            const message =
+                commit.message.split("\n")[0];
+
+            const date =
+                new Date(commit.date);
+
+            const formattedDate =
+                date.toLocaleDateString(
+                    "en-US",
+                    {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric"
+                    }
+                );
+
+            item.innerHTML = `
+                <span class="github-activity-icon">⌘</span>
+
+                <span class="github-activity-title">
+                    ${message}
+                </span>
+
+                <span class="github-activity-repo">
+                    ${commit.repoName}
+                </span>
+
+                <span class="github-activity-date">
+                    ${formattedDate}
+                </span>
+            `;
+
+            activityList.appendChild(item);
+        });
+
+    } catch (error) {
+
+        console.error(
+            "GitHub activity error:",
+            error
+        );
+
+        activityList.innerHTML = `
+            <div class="github-activity-item">
+                <span class="github-activity-title">
+                    Unable to load GitHub activity
+                </span>
+            </div>
+        `;
+    }
+}
+
+loadGithubActivity();
+
+const githubTabs = document.querySelectorAll(".github-tabs button");
+
+githubTabs.forEach((button, index) => {
+
+    button.addEventListener("click", () => {
+
+        githubTabs.forEach(tab => {
+            tab.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const types = ["commits", "merged", "open", "closed"];
+
+        if (types[index] === "commits") {
+            loadGithubActivity();
+        }
+
+        if (types[index] === "merged") {
+            loadGithubPullRequests("merged");
+        }
+
+        if (types[index] === "open") {
+            loadGithubPullRequests("open");
+        }
+
+        if (types[index] === "closed") {
+            loadGithubPullRequests("closed");
+        }
+
+        console.log("Selected GitHub tab:", types[index]);
+    });
+
+});
+
+async function loadGithubPullRequests(type) {
+
+    const activityList =
+        document.getElementById("github-activity-list");
+
+    activityList.innerHTML = "";
+
+    let query = `author:${githubUsername} is:pr`;
+
+    if (type === "merged") {
+        query += " is:merged";
+    } else if (type === "open") {
+        query += " is:open";
+    } else if (type === "closed") {
+        query += " is:closed";
+    }
+
+    try {
+
+        const response = await fetch(
+            `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&per_page=5`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to load pull requests");
+        }
+
+        const data = await response.json();
+
+        const tabIndex =
+            type === "merged" ? 2 :
+                type === "open" ? 3 : 4;
+
+        const tabCount =
+            document.querySelector(
+                `.github-tabs button:nth-child(${tabIndex}) span`
+            );
+
+        if (tabCount) {
+            tabCount.textContent = data.total_count;
+        }
+
+        data.items.forEach((pr) => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "github-activity-item";
+
+            const date =
+                new Date(pr.updated_at);
+
+            const formattedDate =
+                date.toLocaleDateString(
+                    "en-US",
+                    {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric"
+                    }
+                );
+
+            const repo =
+                pr.repository_url.replace(
+                    "https://api.github.com/repos/",
+                    ""
+                );
+
+            item.innerHTML = `
+                <span class="github-activity-icon">⌘</span>
+
+                <span class="github-activity-title">
+                    ${pr.title}
+                </span>
+
+                <span class="github-activity-repo">
+                    ${repo}
+                </span>
+
+                <span class="github-activity-date">
+                    ${formattedDate}
+                </span>
+            `;
+
+            activityList.appendChild(item);
+        });
+
+        if (data.items.length === 0) {
+            activityList.innerHTML = `
+                <div class="github-activity-item">
+                    <span class="github-activity-title">
+                        No ${type} pull requests
+                    </span>
+                </div>
+            `;
+        }
+
+    } catch (error) {
+
+        console.error(
+            "GitHub pull request error:",
+            error
+        );
+    }
+}
+

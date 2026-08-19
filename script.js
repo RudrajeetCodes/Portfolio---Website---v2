@@ -530,7 +530,7 @@ async function loadGithubActivity() {
             document.querySelector(".github-tabs button:first-child span");
 
         if (commitsTab) {
-            commitsTab.textContent = allCommits.length;
+            commitsTab.textContent = commits.length;
         }
 
         if (latestCommits.length === 0) {

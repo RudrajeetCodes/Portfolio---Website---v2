@@ -544,32 +544,55 @@ async function loadGithubActivity() {
     activityList.innerHTML = "";
 
     try {
-        const response = await fetch(
-            `https://api.github.com/users/${githubUsername}/events/public?per_page=100`
+        // Get all public repositories
+        const reposResponse = await fetch(
+            `https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`
         );
 
-        if (!response.ok) {
-            throw new Error("Failed to load GitHub activity");
+        if (!reposResponse.ok) {
+            throw new Error("Failed to load repositories");
         }
 
-        const events = await response.json();
+        const repos = await reposResponse.json();
+        console.log("GitHub repos:", repos);
+        console.log(
+            "Repo names:",
+            repos.map(repo => repo.name)
+        );
 
         const commits = [];
 
-        events.forEach((event) => {
-            if (event.type !== "PushEvent") return;
+        // Get recent commits from each repository
+        const commitRequests = repos.map(async (repo) => {
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${githubUsername}/${repo.name}/commits?per_page=100`
+                );
 
-            const repoName = event.repo.name;
+                if (!response.ok) return;
 
-            event.payload.commits?.forEach((commit) => {
-                commits.push({
-                    message: commit.message,
-                    sha: commit.sha,
-                    repoName: repoName,
-                    date: event.created_at
+                const repoCommits = await response.json();
+
+                repoCommits.forEach((commit) => {
+                    commits.push({
+                        message: commit.commit.message,
+                        sha: commit.sha,
+                        repoName: repo.name,
+                        date:
+                            commit.commit.author?.date ||
+                            commit.commit.committer?.date
+                    });
                 });
-            });
+
+            } catch (error) {
+                console.error(
+                    `Failed to load commits for ${repo.name}:`,
+                    error
+                );
+            }
         });
+
+        await Promise.all(commitRequests);
 
         // Newest first
         commits.sort(
@@ -578,15 +601,19 @@ async function loadGithubActivity() {
                 new Date(a.date)
         );
 
-        // Latest 5 commits
-        const latestCommits =
-            commits.slice(0, 5);
+        // Update total commit count
         const commitsTab =
-            document.querySelector(".github-tabs button:first-child span");
+            document.querySelector(
+                ".github-tabs button:first-child span"
+            );
 
         if (commitsTab) {
             commitsTab.textContent = commits.length;
         }
+
+        // Latest 5 commits
+        const latestCommits =
+            commits.slice(0, 5);
 
         if (latestCommits.length === 0) {
             activityList.innerHTML = `

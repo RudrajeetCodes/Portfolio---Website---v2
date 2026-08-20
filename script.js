@@ -831,3 +831,91 @@ async function loadGithubPullRequests(type) {
     }
 }
 
+const quotes = [
+    {
+        text: '"Always be hustlin\'.',
+        author: "~ Travis Kalanick"
+    },
+    {
+        text: '"The only way to do great work is to love what you do."',
+        author: "~ Steve Jobs"
+    },
+    {
+        text: '"Stay hungry. Stay foolish."',
+        author: "~ Steve Jobs"
+    },
+    {
+        text: '"Talk is cheap. Show me the code."',
+        author: "~ Linus Torvalds"
+    },
+    {
+        text: '"First, solve the problem. Then, write the code."',
+        author: "~ John Johnson"
+    },
+    {
+        text: '"Make it work, make it right, make it fast."',
+        author: "~ Kent Beck"
+    }
+];
+
+const QUOTE_INTERVAL = 5000;
+
+const quoteCard =
+    document.querySelector(".quote-card");
+
+const quoteText =
+    document.getElementById("quote-text");
+
+const quoteAuthor =
+    document.getElementById("quote-author");
+
+let quoteIndex = 0;
+let quoteTimer = null;
+
+function changeQuote() {
+    if (!quoteCard) return;
+
+    quoteCard.classList.add("changing");
+
+    setTimeout(() => {
+        quoteIndex =
+            (quoteIndex + 1) % quotes.length;
+
+        quoteText.textContent =
+            quotes[quoteIndex].text;
+
+        quoteAuthor.textContent =
+            quotes[quoteIndex].author;
+
+        quoteCard.classList.remove("changing");
+    }, 350);
+}
+
+function startQuoteRotation() {
+    if (quoteTimer) return;
+
+    quoteTimer =
+        setInterval(
+            changeQuote,
+            QUOTE_INTERVAL
+        );
+}
+
+function stopQuoteRotation() {
+    clearInterval(quoteTimer);
+    quoteTimer = null;
+}
+
+startQuoteRotation();
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+        if (document.hidden) {
+            stopQuoteRotation();
+        } else {
+            startQuoteRotation();
+        }
+    }
+);
+

@@ -986,8 +986,20 @@ nav::after {
     justify-content: space-between;
 }
 
+.project-tags {
+    display: flex;
+    gap: 6px;
+    display: flex !important;
+    align-items: center;
+    gap: 6px !important;
+}
+
 .project-tags span {
+
+    display: inline-block;
+    flex-shrink: 0;
     padding: 3px 6px;
+
 
     border: 1px dashed #3d3d3d;
     border-radius: 5px;

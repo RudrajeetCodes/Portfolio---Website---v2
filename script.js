@@ -167,6 +167,7 @@ fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
             localStorage.setItem("lastSpotifySong", spotify.song);
             localStorage.setItem("lastSpotifyArtist", spotify.artist);
             localStorage.setItem("lastSpotifyCover", spotify.album_art_url);
+            localStorage.setItem("lastSpotifyTrack", spotify.track_id);
 
         } else {
 

@@ -197,52 +197,101 @@ updatePresence();
 
 setInterval(updatePresence, 2000);
 
-const socket = new WebSocket("wss://api.lanyard.rest/socket");
+let socket;
+let heartbeatInterval;
+let reconnectTimeout;
 
-socket.addEventListener("open", () => {
-    console.log("Lanyard WebSocket connected");
-});
+function connectLanyard() {
+    socket = new WebSocket("wss://api.lanyard.rest/socket");
 
-socket.addEventListener("message", (event) => {
-    const data = JSON.parse(event.data);
+    socket.addEventListener("open", () => {
+        console.log("Lanyard WebSocket connected");
+    });
 
-    console.log("Lanyard event:", data);
+    socket.addEventListener("message", (event) => {
+        const data = JSON.parse(event.data);
 
-    if (data.op === 1) {
-        socket.send(JSON.stringify({
-            op: 2,
-            d: {
-                subscribe_to_id: discordId
+        // Lanyard Hello
+        if (data.op === 1) {
+
+            // Start heartbeat
+            clearInterval(heartbeatInterval);
+
+            heartbeatInterval = setInterval(() => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({
+                        op: 3
+                    }));
+                }
+            }, data.d.heartbeat_interval);
+
+            // Subscribe to Discord presence
+            socket.send(JSON.stringify({
+                op: 2,
+                d: {
+                    subscribe_to_id: discordId
+                }
+            }));
+
+            console.log("Subscribed to Discord presence");
+        }
+
+        // Presence update
+        if (data.t === "PRESENCE_UPDATE") {
+            const status = data.d.discord_status;
+
+            if (status !== "offline") {
+                localStorage.setItem(
+                    "discordLastSeen",
+                    Date.now()
+                );
             }
-        }));
 
-        console.log("Subscribed to Discord presence");
-    }
-    if (data.t === "PRESENCE_UPDATE") {
-        const status = data.d.discord_status;
+            const statusDot =
+                document.getElementById("discord-status");
 
-        if (status !== "offline") {
-            localStorage.setItem("discordLastSeen", Date.now());
+            const tooltip =
+                document.getElementById("discord-tooltip");
+
+            statusDot.className = status;
+
+            if (status === "online") {
+                tooltip.textContent = "Online";
+
+            } else if (status === "idle") {
+                tooltip.textContent = "Idle";
+
+            } else if (status === "dnd") {
+                tooltip.textContent = "Do Not Disturb";
+
+            } else {
+                tooltip.textContent = getLastSeenText();
+            }
+
+            console.log("Live status:", status);
         }
+    });
 
-        const statusDot = document.getElementById("discord-status");
-        const tooltip = document.getElementById("discord-tooltip");
+    socket.addEventListener("close", () => {
+        console.log("Lanyard WebSocket disconnected");
 
-        statusDot.className = status;
+        clearInterval(heartbeatInterval);
 
-        if (status === "online") {
-            tooltip.textContent = "Online";
-        } else if (status === "idle") {
-            tooltip.textContent = "Idle";
-        } else if (status === "dnd") {
-            tooltip.textContent = "Do Not Disturb";
-        } else {
-            tooltip.textContent = getLastSeenText();
-        }
+        // Reconnect after 2 seconds
+        clearTimeout(reconnectTimeout);
 
-        console.log("Live status:", status);
-    }
-});
+        reconnectTimeout = setTimeout(() => {
+            console.log("Reconnecting to Lanyard...");
+            connectLanyard();
+        }, 2000);
+    });
+
+    socket.addEventListener("error", (error) => {
+        console.error("Lanyard WebSocket error:", error);
+    });
+}
+
+connectLanyard();
 
 document.querySelectorAll(".experience-item").forEach((item) => {
     item.addEventListener("click", function () {

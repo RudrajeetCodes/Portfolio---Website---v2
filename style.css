@@ -1717,7 +1717,7 @@ nav::after {
 
 .site-footer {
     border-top: 1px dashed rgba(255, 255, 255, 0.25);
-    padding: 28px 0;
+    padding: 60px 0 28px;
     text-align: center;
     font-size: 12px;
     color: #777;
@@ -2216,10 +2216,10 @@ nav::after {
     /* =========================
        FOOTER
        ========================= */
-
+       
     .site-footer {
         margin: 0;
-        padding: 28px 20px 35px;
+        padding: 60px 20px 35px;
         text-align: center;
         font-size: 11px;
         box-sizing: border-box;

@@ -397,7 +397,6 @@ projects.forEach((project) => {
 
     projectsGrid.appendChild(card);
 });
-
 const githubUsername = "RudrajeetCodes";
 
 async function loadGithubContributions() {
@@ -433,73 +432,56 @@ async function loadGithubContributions() {
             `${calendar.totalContributions.toLocaleString()} contributions in the last year`;
 
         // Month labels
-        // Month labels
+        const weekWidth = 10;
+        const weekGap = 4;
+        const weekStep = weekWidth + weekGap;
+
         let lastMonth = "";
 
         calendar.weeks.forEach((week, weekIndex) => {
+            if (!week.contributionDays.length) return;
 
-            week.contributionDays.forEach((day) => {
-
+            const monthStart = week.contributionDays.find((day) => {
                 const date = new Date(day.date + "T00:00:00");
-
-                const month = date.toLocaleString("en-US", {
-                    month: "short"
-                });
-
-                // Add the first month
-                if (weekIndex === 0 && lastMonth === "") {
-
-                    const label = document.createElement("span");
-
-                    label.className = "github-month";
-                    label.textContent = month;
-
-                    const weekWidth = 10;
-                    const weekGap = 4;
-                    const weekStep = weekWidth + weekGap;
-
-                    label.style.left = `${weekIndex * weekStep}px`;
-
-                    months.appendChild(label);
-
-                    lastMonth = month;
-                }
-
-                // Add a label whenever a new month starts
-                else if (date.getDate() === 1 && month !== lastMonth) {
-
-                    const label = document.createElement("span");
-
-                    label.className = "github-month";
-                    label.textContent = month;
-
-                    const weekWidth = 10;
-                    const weekGap = 4;
-                    const weekStep = weekWidth + weekGap;
-
-                    label.style.left = `${weekIndex * weekStep}px`;
-
-                    months.appendChild(label);
-
-                    lastMonth = month;
-                }
+                return date.getDate() === 1;
             });
+
+            if (!monthStart) return;
+
+            const date = new Date(
+                monthStart.date + "T00:00:00"
+            );
+
+            const month = date.toLocaleString("en-US", {
+                month: "short"
+            });
+
+            if (month !== lastMonth) {
+                const label = document.createElement("span");
+
+                label.className = "github-month";
+                label.textContent = month;
+
+                label.style.left =
+                    `${weekIndex * weekStep}px`;
+
+                months.appendChild(label);
+
+                lastMonth = month;
+            }
         });
 
         // Contribution graph
         calendar.weeks.forEach((week) => {
-
             const weekColumn = document.createElement("div");
 
             weekColumn.className = "github-week";
 
             week.contributionDays.forEach((day) => {
-
                 const cell = document.createElement("div");
 
                 cell.className = "github-day";
 
-                // GitHub contribution level
                 const levelMap = {
                     "NONE": 0,
                     "FIRST_QUARTILE": 1,
@@ -523,7 +505,6 @@ async function loadGithubContributions() {
         });
 
     } catch (error) {
-
         console.error(
             "GitHub contribution error:",
             error
@@ -919,40 +900,5 @@ document.addEventListener(
     }
 );
 
-// =========================
-// NAV ACTIVE SECTION
-// =========================
 
-const navLinks = document.querySelectorAll(".nav-links a");
-
-const sections = document.querySelectorAll(
-    "#home, #about, #projects, #activity"
-);
-
-const sectionObserver = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-
-            navLinks.forEach((link) => {
-                link.classList.remove("active");
-
-                if (
-                    link.getAttribute("href") ===
-                    `#${entry.target.id}`
-                ) {
-                    link.classList.add("active");
-                }
-            });
-        });
-    },
-    {
-        rootMargin: "-30% 0px -60% 0px",
-        threshold: 0
-    }
-);
-
-sections.forEach((section) => {
-    sectionObserver.observe(section);
-});
 

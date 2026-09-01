@@ -919,3 +919,40 @@ document.addEventListener(
     }
 );
 
+// =========================
+// NAV ACTIVE SECTION
+// =========================
+
+const navLinks = document.querySelectorAll(".nav-links a");
+
+const sections = document.querySelectorAll(
+    "#home, #about, #projects, #activity"
+);
+
+const sectionObserver = new IntersectionObserver(
+    (entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            navLinks.forEach((link) => {
+                link.classList.remove("active");
+
+                if (
+                    link.getAttribute("href") ===
+                    `#${entry.target.id}`
+                ) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    },
+    {
+        rootMargin: "-30% 0px -60% 0px",
+        threshold: 0
+    }
+);
+
+sections.forEach((section) => {
+    sectionObserver.observe(section);
+});
+

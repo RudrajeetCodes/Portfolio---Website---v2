@@ -1,5 +1,10 @@
 html {
     scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+}
+
+section {
+    scroll-margin-top: 65px;
 }
 
 body {
@@ -53,6 +58,8 @@ nav::after {
     border-left: 1px dashed rgba(255, 255, 255, 0.25);
     pointer-events: none;
 }
+
+
 
 nav::before {
     left: calc(50% - 430px);

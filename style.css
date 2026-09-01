@@ -310,6 +310,30 @@ nav::after {
     object-fit: contain;
 }
 
+.tech-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.tech-icon img[alt="GitHub"] {
+    width: 30px;
+    height: 30px;
+}
+
+.tech-icon img[alt="Vercel"] {
+    display: none;
+}
+
+.tech-icon.vercel-icon::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 26px solid #ffffff;
+}
+
 .hero-description {
     margin: 18px 0 0 5px;
     max-width: 800px;
@@ -626,6 +650,41 @@ nav::after {
     border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
 
     transform: translateX(-50%);
+}
+
+.tech-icon::after {
+    content: attr(data-tech);
+
+    position: absolute;
+    left: 50%;
+    bottom: -34px;
+
+    transform: translateX(-50%) translateY(-4px);
+
+    padding: 5px 8px;
+
+    background: #151515;
+    border: 1px solid #2d2d2d;
+    border-radius: 5px;
+
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+
+    z-index: 20;
+}
+
+.tech-icon:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 .experience {
@@ -1899,6 +1958,7 @@ nav::after {
     }
 
     .tech-icon {
+        position: relative;
         width: 42px;
         height: 42px;
     }

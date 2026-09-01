@@ -670,6 +670,10 @@ async function loadGithubActivity() {
 
 loadGithubActivity();
 
+loadGithubPullRequests("merged", false);
+loadGithubPullRequests("open", false);
+loadGithubPullRequests("closed", false);
+
 const githubTabs = document.querySelectorAll(".github-tabs button");
 
 githubTabs.forEach((button, index) => {
@@ -705,12 +709,14 @@ githubTabs.forEach((button, index) => {
 
 });
 
-async function loadGithubPullRequests(type) {
+async function loadGithubPullRequests(type, render = true) {
 
     const activityList =
         document.getElementById("github-activity-list");
 
-    activityList.innerHTML = "";
+    if (render) {
+        activityList.innerHTML = "";
+    }
 
     let query = `author:${githubUsername} is:pr`;
 
@@ -747,60 +753,63 @@ async function loadGithubPullRequests(type) {
             tabCount.textContent = data.total_count;
         }
 
-        data.items.forEach((pr) => {
+        if (render) {
 
-            const item =
-                document.createElement("div");
+            data.items.forEach((pr) => {
 
-            item.className =
-                "github-activity-item";
+                const item =
+                    document.createElement("div");
 
-            const date =
-                new Date(pr.updated_at);
+                item.className =
+                    "github-activity-item";
 
-            const formattedDate =
-                date.toLocaleDateString(
-                    "en-US",
-                    {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric"
-                    }
-                );
+                const date =
+                    new Date(pr.updated_at);
 
-            const repo =
-                pr.repository_url.replace(
-                    "https://api.github.com/repos/",
-                    ""
-                );
+                const formattedDate =
+                    date.toLocaleDateString(
+                        "en-US",
+                        {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric"
+                        }
+                    );
 
-            item.innerHTML = `
-                <span class="github-activity-icon">⌘</span>
+                const repo =
+                    pr.repository_url.replace(
+                        "https://api.github.com/repos/",
+                        ""
+                    );
 
+                item.innerHTML = `
+            <span class="github-activity-icon">⌘</span>
+
+            <span class="github-activity-title">
+                ${pr.title}
+            </span>
+
+            <span class="github-activity-repo">
+                ${repo}
+            </span>
+
+            <span class="github-activity-date">
+                ${formattedDate}
+            </span>
+        `;
+
+                activityList.appendChild(item);
+            });
+
+            if (data.items.length === 0) {
+                activityList.innerHTML = `
+            <div class="github-activity-item">
                 <span class="github-activity-title">
-                    ${pr.title}
+                    No ${type} pull requests
                 </span>
-
-                <span class="github-activity-repo">
-                    ${repo}
-                </span>
-
-                <span class="github-activity-date">
-                    ${formattedDate}
-                </span>
-            `;
-
-            activityList.appendChild(item);
-        });
-
-        if (data.items.length === 0) {
-            activityList.innerHTML = `
-                <div class="github-activity-item">
-                    <span class="github-activity-title">
-                        No ${type} pull requests
-                    </span>
-                </div>
-            `;
+            </div>
+        `;
+            }
         }
 
     } catch (error) {

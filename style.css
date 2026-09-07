@@ -1544,6 +1544,17 @@ nav::after {
     background: #111;
 }
 
+.github-activity-inner {
+    margin: -18px -18px;
+
+    padding: 20px 26px;
+
+    border: 1px solid #242424;
+    border-radius: 10px;
+
+    background: #0d0d0d;
+}
+
 .github-tabs {
     display: inline-flex;
     align-items: center;
@@ -2173,6 +2184,17 @@ nav::after {
         padding: 28px 0 40px;
     }
 
+    .github-inner {
+        margin: -11px;
+
+        padding: 18px 20px;
+
+        border: 1px solid #242424;
+        border-radius: 10px;
+
+        background: #0d0d0d;
+    }
+
     .github-contributions {
         padding: 18px;
         overflow: hidden;
@@ -2197,6 +2219,17 @@ nav::after {
         white-space: nowrap;
         font-size: 9px;
         padding: 7px 10px;
+    }
+
+    .github-activity-inner {
+        margin: -10px -10px;
+
+        padding: 20px 26px;
+
+        border: 1px solid #242424;
+        border-radius: 10px;
+
+        background: #0d0d0d;
     }
 
 

@@ -428,8 +428,7 @@ async function loadGithubContributions() {
         total.textContent =
             calendar.totalContributions.toLocaleString();
 
-        lastYear.textContent =
-            `${calendar.totalContributions.toLocaleString()} contributions in the last year`;
+        lastYear.textContent = "Contribution activity";
 
         // Month labels
         const weekWidth = 10;

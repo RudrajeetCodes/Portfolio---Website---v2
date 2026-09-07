@@ -1341,6 +1341,8 @@ nav::after {
     font-weight: 600;
 }
 
+
+
 .github-contributions {
     padding: 28px 32px;
 
@@ -1348,6 +1350,19 @@ nav::after {
     border-radius: 14px;
 
     background: #111;
+
+    position: relative;
+}
+
+.github-inner {
+    margin: -18px;
+
+    padding: 18px 20px;
+
+    border: 1px solid #242424;
+    border-radius: 10px;
+
+    background: #0d0d0d;
 }
 
 .github-contributions-header {
@@ -1388,6 +1403,10 @@ nav::after {
     border-color: #555;
     background: #181818;
 }
+
+
+
+
 
 .github-months {
     position: relative;
@@ -1433,25 +1452,29 @@ nav::after {
     width: 10px;
     height: 10px;
 
-    border-radius: 2px;
+    border-radius: 3px;
 
     background: #1b1b1b;
 }
 
+.github-day.level-0 {
+    background: #202020;
+}
+
 .github-day.level-1 {
-    background: #0e4429;
+    background: #1b4d2b;
 }
 
 .github-day.level-2 {
-    background: #006d32;
+    background: #216638;
 }
 
 .github-day.level-3 {
-    background: #26a641;
+    background: #278044;
 }
 
 .github-day.level-4 {
-    background: #39d353;
+    background: #32a852;
 }
 
 .github-calendar-footer {
@@ -1482,6 +1505,8 @@ nav::after {
     color: #777;
     margin: 0 3px;
 }
+
+
 
 .legend-cell {
     width: 10px;

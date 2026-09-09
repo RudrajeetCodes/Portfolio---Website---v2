@@ -1519,19 +1519,19 @@ nav::after {
 }
 
 .legend-cell.level-1 {
-    background: #0e4429;
+    background: #1b4d2b;
 }
 
 .legend-cell.level-2 {
-    background: #006d32;
+    background: #216638;
 }
 
 .legend-cell.level-3 {
-    background: #26a641;
+    background: #278044;
 }
 
 .legend-cell.level-4 {
-    background: #39d353;
+    background: #32a852;
 }
 
 .github-activity-card {

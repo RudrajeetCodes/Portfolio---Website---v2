@@ -988,4 +988,33 @@ document.addEventListener(
 
 
 
+const themeToggle = document.getElementById("theme-toggle");
 
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "light") {
+    document.body.classList.add("light-theme");
+    themeToggle.textContent = "☀";
+} else {
+    themeToggle.textContent = "☾";
+}
+
+themeToggle.addEventListener("click", () => {
+    themeToggle.classList.add("theme-switching");
+
+    setTimeout(() => {
+        document.body.classList.toggle("light-theme");
+
+        const isLight =
+            document.body.classList.contains("light-theme");
+
+        themeToggle.textContent = isLight ? "☀" : "☾";
+
+        localStorage.setItem(
+            "theme",
+            isLight ? "light" : "dark"
+        );
+
+        themeToggle.classList.remove("theme-switching");
+    }, 150);
+});

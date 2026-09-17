@@ -142,6 +142,26 @@ nav::after {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 10000;
+}
+
+body,
+nav,
+.tech-icon,
+.project-card,
+.experience-list,
+.spotify-card,
+.focus-card,
+.github-contributions,
+.github-activity-card,
+.github-inner,
+.github-activity-inner,
+.quote-card {
+    transition:
+        background-color 0.4s ease,
+        color 0.4s ease,
+        border-color 0.4s ease;
 }
 
 .hero {
@@ -2316,4 +2336,295 @@ nav::after {
 
 
 
+}
+
+/* =========================
+   LIGHT THEME
+   ========================= */
+
+body.light-theme {
+    background-color: #f5f5f5;
+    color: #111;
+}
+
+body.light-theme nav {
+    background: rgba(245, 245, 245, 0.8);
+    border-bottom-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .nav-content,
+body.light-theme .nav-links a,
+body.light-theme .theme-btn {
+    color: #111;
+}
+
+body.light-theme .nav-links a::after {
+    background-color: #111;
+}
+
+body.light-theme .hero-name,
+body.light-theme .tech-stack h2,
+body.light-theme .experience h2,
+body.light-theme .projects-header h2,
+body.light-theme .about-container h2,
+body.light-theme .github-container h2 {
+    color: #111;
+}
+
+body.light-theme .hero-role,
+body.light-theme .hero-description,
+body.light-theme .section-label {
+    color: #666;
+}
+
+body.light-theme .tech-badge {
+    color: #444;
+    border-color: #888;
+}
+
+body.light-theme .tech-icon,
+body.light-theme .project-card,
+body.light-theme .experience-list,
+body.light-theme .spotify-card,
+body.light-theme .focus-card,
+body.light-theme .github-contributions,
+body.light-theme .github-activity-card {
+    background: #fff;
+    border-color: #d5d5d5;
+}
+
+body.light-theme .github-inner,
+body.light-theme .github-activity-inner {
+    background: #fafafa;
+    border-color: #ddd;
+}
+
+body.light-theme .experience-icon {
+    background: #f5f5f5;
+    border-color: #d5d5d5;
+}
+
+body.light-theme .experience-info h3,
+body.light-theme .project-title h3,
+body.light-theme .about-info h3,
+body.light-theme .spotify-details h3,
+body.light-theme .focus-details h3 {
+    color: #222;
+}
+
+body.light-theme .experience-info p,
+body.light-theme .experience-meta span,
+body.light-theme .project-info p,
+body.light-theme .project-type,
+body.light-theme .about-info p,
+body.light-theme .spotify-details p,
+body.light-theme .activity-label {
+    color: #666;
+}
+
+body.light-theme .experience-description {
+    background: #f7f7f7;
+    border-color: #ddd;
+    color: #666;
+}
+
+body.light-theme .project-image {
+    background: #eee;
+    border-bottom-color: #d5d5d5;
+}
+
+body.light-theme .project-tags span {
+    border-color: #bbb;
+    color: #666;
+}
+
+body.light-theme .project-links a {
+    color: #666;
+    border-color: #d5d5d5;
+}
+
+body.light-theme .github-tabs {
+    background: #f5f5f5;
+    border-color: #d5d5d5;
+}
+
+body.light-theme .github-tabs button {
+    color: #666;
+}
+
+body.light-theme .github-tabs button:hover,
+body.light-theme .github-tabs button.active {
+    background: #ddd;
+    color: #222;
+}
+
+body.light-theme .github-activity-item {
+    color: #333;
+    border-bottom-color: #ddd;
+}
+
+body.light-theme .github-activity-repo,
+body.light-theme .github-activity-date {
+    color: #777;
+}
+
+body.light-theme .quote-card {
+    background: #fff;
+    border-color: #d5d5d5;
+}
+
+body.light-theme .quote-text {
+    color: #444;
+}
+
+body.light-theme .quote-author {
+    color: #777;
+}
+
+body.light-theme .github-profile-btn {
+    color: #666;
+    border-color: #bbb;
+}
+
+body.light-theme .github-day.level-0 {
+    background: #e5e5e5;
+}
+
+body.light-theme .github-day.level-1 {
+    background: #b8dfc4;
+}
+
+body.light-theme .github-day.level-2 {
+    background: #7bc491;
+}
+
+body.light-theme .github-day.level-3 {
+    background: #4aaa68;
+}
+
+body.light-theme .github-day.level-4 {
+    background: #258f4b;
+}
+
+body.light-theme .experience-item {
+    border-bottom: 1px solid #d5d5d5;
+}
+
+body.light-theme .experience-item:last-child {
+    border-bottom: none;
+}
+
+/* Guide lines */
+
+body.light-theme::before,
+body.light-theme::after,
+body.light-theme nav::before,
+body.light-theme nav::after {
+    border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* Section separators */
+
+body.light-theme .hero-container::after,
+body.light-theme .hero::after,
+body.light-theme .activity::after,
+body.light-theme .tech-stack::before,
+body.light-theme .tech-stack::after,
+body.light-theme .experience::before,
+body.light-theme .experience::after,
+body.light-theme .projects::before,
+body.light-theme .projects::after,
+body.light-theme .about-section::before,
+body.light-theme .about-section::after,
+body.light-theme .github-section::before,
+body.light-theme .github-section::after,
+body.light-theme .quote-section::before,
+body.light-theme .quote-section::after {
+    border-color: rgba(0, 0, 0, 0.18);
+}
+
+.theme-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 21px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.35s ease,
+        color 0.35s ease;
+}
+
+.theme-btn:hover {
+    transform: rotate(20deg) scale(1.08);
+}
+
+body.light-theme .theme-btn {
+    color: #111;
+}
+
+.theme-btn.theme-switching {
+    transform: rotate(180deg) scale(0.8);
+}
+
+body.light-theme .contact-btn {
+    color: #222;
+    border-color: #999;
+    background-color: #fff;
+}
+
+body.light-theme .contact-btn:hover {
+    background-color: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+body.light-theme .legend-cell {
+    background: #e8e8e8;
+}
+
+body.light-theme .legend-cell.level-1 {
+    background: #c9d2e3;
+}
+
+body.light-theme .legend-cell.level-2 {
+    background: #9aa9c2;
+}
+
+body.light-theme .legend-cell.level-3 {
+    background: #657898;
+}
+
+body.light-theme .legend-cell.level-4 {
+    background: #394b70;
+}
+
+body.light-theme .github-day.level-0 {
+    background: #e8e8e8;
+}
+
+body.light-theme .github-day.level-1 {
+    background: #c9d2e3;
+}
+
+body.light-theme .github-day.level-2 {
+    background: #9aa9c2;
+}
+
+body.light-theme .github-day.level-3 {
+    background: #657898;
+}
+
+body.light-theme .github-day.level-4 {
+    background: #394b70;
 }

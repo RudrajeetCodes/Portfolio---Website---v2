@@ -1362,6 +1362,138 @@ nav,
 }
 
 
+/* =========================
+   CODING CARD
+========================= */
+
+.coding-card {
+    margin-bottom: 24px;
+    padding: 28px 32px;
+
+    border: 1px solid #292929;
+    border-radius: 14px;
+
+    background: #111;
+}
+
+.coding-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #242424;
+}
+
+.coding-today {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+    text-align: center;
+}
+
+.coding-status,
+.coding-today,
+.coding-commit {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.coding-card strong {
+    color: #d0d0d0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.coding-commit {
+    margin-top: 18px;
+}
+
+.coding-languages {
+    margin-top: 22px;
+}
+
+.coding-languages>.activity-label {
+    display: block;
+    margin-bottom: 14px;
+}
+
+.language-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 11px;
+
+    color: #aaa;
+    font-size: 12px;
+}
+
+.language-row>span {
+    width: 75px;
+    flex-shrink: 0;
+}
+
+.language-bar {
+    flex: 1;
+
+    height: 5px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #242424;
+}
+
+.language-fill {
+    height: 100%;
+
+    border-radius: 999px;
+
+    background: #32a852;
+}
+
+.language-row small {
+    width: 48px;
+
+    color: #777;
+
+    font-size: 10px;
+    text-align: right;
+}
+
+/* Language usage */
+
+.language-fill.javascript {
+    width: 100%;
+}
+
+.language-fill.python {
+    width: 66%;
+}
+
+.language-fill.html {
+    width: 47%;
+}
+
+.language-fill.css {
+    width: 26%;
+}
+
+.language-fill.cpp {
+    width: 12%;
+}
+
+.language-fill.other {
+    width: 8%;
+}
+
+
 
 .github-contributions {
     padding: 28px 32px;
@@ -2627,4 +2759,105 @@ body.light-theme .github-day.level-3 {
 
 body.light-theme .github-day.level-4 {
     background: #394b70;
+}
+
+/* =========================
+   LIGHT THEME - EFFECTS
+   ========================= */
+
+body.light-theme::before,
+body.light-theme::after,
+body.light-theme nav::before,
+body.light-theme nav::after {
+    border-color: rgba(0, 0, 0, 0.28);
+}
+
+/* Section separators */
+body.light-theme .hero-container::after,
+body.light-theme .hero::after,
+body.light-theme .activity::after,
+body.light-theme .tech-stack::before,
+body.light-theme .tech-stack::after,
+body.light-theme .experience::before,
+body.light-theme .experience::after,
+body.light-theme .projects::before,
+body.light-theme .projects::after,
+body.light-theme .about-section::before,
+body.light-theme .about-section::after,
+body.light-theme .github-section::before,
+body.light-theme .github-section::after,
+body.light-theme .quote-section::before,
+body.light-theme .quote-section::after {
+    border-color: rgba(0, 0, 0, 0.28);
+}
+
+/* Tech icons */
+body.light-theme .tech-icon:hover {
+    border-color: #888;
+    background-color: #f0f0f0;
+}
+
+/* Tech tooltips */
+body.light-theme .tech-icon::after {
+    background: #222;
+    border-color: #444;
+    color: #eee;
+}
+
+/* Navigation hover */
+body.light-theme .nav-links a:hover::after {
+    background-color: #222;
+}
+
+/* Social icons */
+body.light-theme .hero-socials a:hover {
+    color: #222;
+}
+
+/* Project hover */
+body.light-theme .project-card:hover {
+    border-color: #999;
+}
+
+/* Project links */
+body.light-theme .project-links a:hover {
+    color: #222;
+    border-color: #999;
+    background-color: #f0f0f0;
+}
+
+/* Project tags */
+body.light-theme .project-tags span:hover {
+    color: #333;
+    border-color: #888;
+}
+
+/* Experience hover */
+body.light-theme .experience-item:hover .experience-arrow {
+    color: #222;
+}
+
+/* GitHub button */
+body.light-theme .github-profile-btn:hover {
+    color: #222;
+    border-color: #888;
+    background: #f0f0f0;
+}
+
+/* GitHub activity */
+body.light-theme .github-show-more:hover {
+    color: #222;
+}
+
+/* GitHub tabs */
+body.light-theme .github-tabs button:hover {
+    background: #e5e5e5;
+    color: #222;
+}
+
+/* Quote card subtle depth */
+body.light-theme .quote-card {
+    box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.025),
+        0 0 10px rgba(0, 0, 0, 0.04);
 }

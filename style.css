@@ -1362,46 +1362,77 @@ nav,
 }
 
 
-/* =========================
-   CODING CARD
-========================= */
 
-.coding-card {
-    margin-bottom: 24px;
+.github-contributions {
     padding: 28px 32px;
 
     border: 1px solid #292929;
     border-radius: 14px;
 
     background: #111;
+
+    position: relative;
 }
+
+/* =========================
+   CODING CARD
+========================= */
+
+.coding-card {
+    margin: -18px -18px 24px;
+    padding: 28px 20px;
+
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+}
+
+/* Top statistics */
+
+/* Top statistics */
 
 .coding-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: start;
 
     padding-bottom: 18px;
-
     border-bottom: 1px solid #242424;
-}
-
-.coding-today {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-
-    text-align: center;
 }
 
 .coding-status,
 .coding-today,
-.coding-commit {
+.coding-commits {
     display: flex;
     flex-direction: column;
     gap: 5px;
+
+    width: max-content;
 }
+
+.coding-status {
+    justify-self: start;
+
+    align-items: flex-start;
+    text-align: left;
+}
+
+.coding-today {
+    justify-self: center;
+
+    align-items: center;
+    text-align: center;
+}
+
+.coding-commits {
+    justify-self: end;
+
+    align-items: center;
+    text-align: center;
+}
+
+
 
 .coding-card strong {
     color: #d0d0d0;
@@ -1409,15 +1440,23 @@ nav,
     font-weight: 600;
 }
 
+/* Latest commit */
+
 .coding-commit {
-    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    margin-top: 20px;
 }
+
+/* Languages */
 
 .coding-languages {
     margin-top: 22px;
 }
 
-.coding-languages>.activity-label {
+.coding-languages > .activity-label {
     display: block;
     margin-bottom: 14px;
 }
@@ -1433,7 +1472,7 @@ nav,
     font-size: 12px;
 }
 
-.language-row>span {
+.language-row > span {
     width: 75px;
     flex-shrink: 0;
 }
@@ -1491,19 +1530,6 @@ nav,
 
 .language-fill.other {
     width: 8%;
-}
-
-
-
-.github-contributions {
-    padding: 28px 32px;
-
-    border: 1px solid #292929;
-    border-radius: 14px;
-
-    background: #111;
-
-    position: relative;
 }
 
 .github-inner {

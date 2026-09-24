@@ -581,6 +581,37 @@ async function loadGithubActivity() {
                 new Date(a.date)
         );
 
+        // ==============================
+        // Coding statistics
+        // ==============================
+
+        const codingCommits =
+            document.querySelector(".coding-commits strong");
+
+        const latestProject =
+            document.querySelector(".coding-commit strong");
+
+        // Commits today
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const commitsToday = commits.filter((commit) => {
+            const commitDate = new Date(commit.date);
+            return commitDate >= today;
+        });
+
+        if (codingCommits) {
+            codingCommits.textContent = commitsToday.length;
+        }
+
+        // Latest project
+        if (latestProject && commits.length > 0) {
+            const latest = commits[0];
+
+            latestProject.textContent =
+                `> ${latest.repoName}`;
+        }
+
         // Update total commit count
         const commitsTab =
             document.querySelector(

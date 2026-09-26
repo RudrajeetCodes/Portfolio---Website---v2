@@ -2896,3 +2896,99 @@ body.light-theme .quote-card {
         inset 0 0 0 1px rgba(0, 0, 0, 0.025),
         0 0 10px rgba(0, 0, 0, 0.04);
 }
+
+/* =========================
+   LIGHT THEME - NEW GITHUB
+   ========================= */
+
+/* Coding statistics */
+
+body.light-theme .coding-card {
+    color: #222;
+}
+
+body.light-theme .coding-card strong {
+    color: #222;
+}
+
+body.light-theme .coding-top {
+    border-bottom-color: #ddd;
+}
+
+body.light-theme .coding-commit strong {
+    color: #333;
+}
+
+body.light-theme .language-row {
+    color: #555;
+}
+
+body.light-theme .language-bar {
+    background: #e8e8e8;
+}
+
+body.light-theme .language-fill {
+    background: #394b70;
+}
+
+body.light-theme .language-row small {
+    color: #777;
+}
+
+
+/* GitHub activity */
+
+body.light-theme .github-activity-title {
+    color: #333;
+}
+
+body.light-theme .github-activity-icon {
+    color: #777;
+}
+
+body.light-theme .github-activity-item {
+    color: #333;
+    border-bottom-color: #ddd;
+}
+
+body.light-theme .github-activity-repo,
+body.light-theme .github-activity-date {
+    color: #777;
+}
+
+body.light-theme .github-show-more {
+    color: #777;
+}
+
+body.light-theme .github-show-more:hover {
+    color: #222;
+}
+
+
+/* GitHub tabs */
+
+body.light-theme .github-tabs button {
+    color: #666;
+}
+
+body.light-theme .github-tabs button:hover,
+body.light-theme .github-tabs button.active {
+    background: #ddd;
+    color: #222;
+}
+
+
+/* Coding status */
+
+body.light-theme .coding-status strong {
+    color: #333;
+}
+
+
+/* Contribution calendar */
+
+body.light-theme .github-calendar-footer,
+body.light-theme .github-calendar-footer span,
+body.light-theme .github-legend span {
+    color: #777;
+}

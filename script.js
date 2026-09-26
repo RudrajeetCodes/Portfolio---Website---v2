@@ -631,7 +631,7 @@ async function loadGithubActivity() {
         function renderCommits() {
 
             const visibleCommits = showingAll
-                ? commits
+                ? commits.slice(0, 20)
                 : commits.slice(0, 5);
 
             // Fade slightly while changing the list
@@ -707,7 +707,7 @@ async function loadGithubActivity() {
                         showMoreButton.textContent =
                             showingAll
                                 ? "Show less"
-                                : "Show all";
+                                : "Show more";
 
                     } else {
 
@@ -738,7 +738,7 @@ async function loadGithubActivity() {
         }
 
         renderCommits();
-        
+
     } catch (error) {
 
         console.error(

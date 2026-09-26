@@ -1086,7 +1086,7 @@ loadWakaTimeStatus();
 setInterval(() => {
     loadWakaTime();
     loadWakaTimeStatus();
-}, 5000);
+}, 30000);
 
 const themeToggle = document.getElementById("theme-toggle");
 

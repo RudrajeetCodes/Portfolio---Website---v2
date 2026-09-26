@@ -1018,6 +1018,43 @@ document.addEventListener(
 );
 
 
+async function loadWakaTime() {
+    try {
+        const response = await fetch("/api/wakatime");
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch WakaTime");
+        }
+
+        const data = await response.json();
+
+        const totalSeconds =
+            data.data?.grand_total?.total_seconds || 0;
+
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+        let codingTime = "";
+
+        if (hours > 0) {
+            codingTime = `${hours}h ${minutes}m`;
+        } else {
+            codingTime = `${minutes}m`;
+        }
+
+        const codingToday =
+            document.querySelector(".coding-today strong");
+
+        if (codingToday) {
+            codingToday.textContent = codingTime;
+        }
+
+    } catch (error) {
+        console.error("WakaTime error:", error);
+    }
+}
+
+loadWakaTime();
 
 const themeToggle = document.getElementById("theme-toggle");
 

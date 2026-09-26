@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         }
 
         const auth = Buffer
-            .from(`${apiKey}:`)
+            .from(apiKey)
             .toString("base64");
 
         const response = await fetch(

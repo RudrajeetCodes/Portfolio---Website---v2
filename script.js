@@ -1056,6 +1056,34 @@ async function loadWakaTime() {
 
 loadWakaTime();
 
+async function loadWakaTimeStatus() {
+    try {
+        const response = await fetch("/api/wakatime-status");
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch WakaTime status");
+        }
+
+        const data = await response.json();
+
+        const codingStatus =
+            document.querySelector(".coding-status strong");
+
+        if (!codingStatus) return;
+
+        if (data.active) {
+            codingStatus.textContent = "🟢 ACTIVE";
+        } else {
+            codingStatus.textContent = "⚫ INACTIVE";
+        }
+
+    } catch (error) {
+        console.error("WakaTime status error:", error);
+    }
+}
+
+loadWakaTimeStatus();
+
 const themeToggle = document.getElementById("theme-toggle");
 
 const savedTheme = localStorage.getItem("theme");

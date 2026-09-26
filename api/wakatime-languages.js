@@ -45,6 +45,22 @@ export default async function handler(req, res) {
             });
         }
 
+        // Always show these languages
+        const defaultLanguages = [
+            "JavaScript",
+            "Python",
+            "HTML",
+            "CSS",
+            "C++",
+            "Other"
+        ];
+
+        defaultLanguages.forEach((language) => {
+            if (!(language in languageTotals)) {
+                languageTotals[language] = 0;
+            }
+        });
+
         const languages = Object.entries(languageTotals)
             .map(([name, total_seconds]) => ({
                 name,

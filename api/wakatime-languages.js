@@ -14,15 +14,16 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        if (!response.ok) {
+        // WakaTime can return 202 while stats are being refreshed.
+        // Still return whatever language data is available.
+        if (response.status !== 200 && response.status !== 202) {
             return res.status(response.status).json({
                 error: "WakaTime rejected the request",
                 wakatime: data
             });
         }
 
-        const languages =
-            data.data?.languages || [];
+        const languages = data.data?.languages || [];
 
         const result = languages
             .map((language) => ({
@@ -36,7 +37,8 @@ export default async function handler(req, res) {
             );
 
         return res.status(200).json({
-            languages: result
+            languages: result,
+            up_to_date: data.data?.is_up_to_date ?? true
         });
 
     } catch (error) {

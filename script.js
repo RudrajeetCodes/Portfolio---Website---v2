@@ -1020,7 +1020,7 @@ document.addEventListener(
 
 async function loadWakaTime() {
     try {
-        const response = await fetch("/api/wakatime");
+        const response = await fetch("/api/wakatime-today");
 
         if (!response.ok) {
             throw new Error("Failed to fetch WakaTime");
@@ -1028,8 +1028,7 @@ async function loadWakaTime() {
 
         const data = await response.json();
 
-        const totalSeconds =
-            data.data?.grand_total?.total_seconds || 0;
+        const totalSeconds = data.total_seconds || 0;
 
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);

@@ -8,60 +8,34 @@ export default async function handler(req, res) {
             });
         }
 
-        const today = new Date(
-            new Date().toLocaleString("en-US", {
-                timeZone: "Asia/Kolkata"
-            })
+        const response = await fetch(
+            `https://api.wakatime.com/api/v1/users/current/summaries?range=last_7_days&api_key=${encodeURIComponent(apiKey)}`
         );
 
-        // Monday of the current week
-        const day = today.getDay();
-        const diff = day === 0 ? -6 : 1 - day;
+        const data = await response.json();
 
-        const monday = new Date(today);
-        monday.setDate(today.getDate() + diff);
-
-        const dates = [];
-
-        for (
-            let date = new Date(monday);
-            date <= today;
-            date.setDate(date.getDate() + 1)
-        ) {
-            dates.push(
-                date.toISOString().slice(0, 10)
-            );
+        if (!response.ok) {
+            return res.status(response.status).json({
+                error: "WakaTime rejected the request",
+                wakatime: data
+            });
         }
-
-        const results = await Promise.all(
-            dates.map(async (date) => {
-                const response = await fetch(
-                    `https://api.wakatime.com/api/v1/users/current/durations?date=${date}&timezone=Asia/Kolkata&api_key=${encodeURIComponent(apiKey)}`
-                );
-
-                if (!response.ok) {
-                    throw new Error(
-                        `Failed to fetch WakaTime data for ${date}`
-                    );
-                }
-
-                return response.json();
-            })
-        );
 
         const languageTotals = {};
 
-        results.forEach((result) => {
-            const durations = result.data || [];
+        const days = data.data || [];
 
-            durations.forEach((duration) => {
-                const language = duration.language;
+        days.forEach((day) => {
+            const languages = day.languages || [];
 
-                if (!language) return;
+            languages.forEach((language) => {
+                const name = language.name;
 
-                languageTotals[language] =
-                    (languageTotals[language] || 0) +
-                    (duration.duration || 0);
+                if (!name) return;
+
+                languageTotals[name] =
+                    (languageTotals[name] || 0) +
+                    (language.total_seconds || 0);
             });
         });
 
@@ -80,10 +54,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error(
-            "WakaTime languages error:",
-            error
-        );
+        console.error("WakaTime languages error:", error);
 
         return res.status(500).json({
             error: "Internal server error"

@@ -8,26 +8,18 @@ export default async function handler(req, res) {
             });
         }
 
-        const auth = Buffer
-            .from(apiKey)
-            .toString("base64");
-
         const response = await fetch(
-            "https://api.wakatime.com/api/v1/users/current/status_bar/today",
-            {
-                headers: {
-                    Authorization: `Basic ${auth}`
-                }
-            }
+            `https://api.wakatime.com/api/v1/users/current/status_bar/today?api_key=${encodeURIComponent(apiKey)}`
         );
+
+        const data = await response.json();
 
         if (!response.ok) {
             return res.status(response.status).json({
-                error: "Failed to fetch WakaTime data"
+                error: "WakaTime rejected the request",
+                wakatime: data
             });
         }
-
-        const data = await response.json();
 
         return res.status(200).json(data);
 

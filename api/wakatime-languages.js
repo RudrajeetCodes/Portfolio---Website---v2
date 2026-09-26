@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         }
 
         const response = await fetch(
-            `https://api.wakatime.com/api/v1/users/current/summaries?range=This%20Week&timezone=Asia/Kolkata&api_key=${encodeURIComponent(apiKey)}`
+            `https://api.wakatime.com/api/v1/users/current/stats/last_7_days?api_key=${encodeURIComponent(apiKey)}`
         );
 
         const data = await response.json();
@@ -21,49 +21,22 @@ export default async function handler(req, res) {
             });
         }
 
-        const languageTotals = {};
+        const languages =
+            data.data?.languages || [];
 
-        const days = data.data || [];
-
-        days.forEach((day) => {
-            const languages = day.languages || [];
-
-            languages.forEach((language) => {
-                if (!language.name) return;
-
-                languageTotals[language.name] =
-                    (languageTotals[language.name] || 0) +
-                    (language.total_seconds || 0);
-            });
-        });
-
-        // Languages we always want visible
-        const defaultLanguages = [
-            "JavaScript",
-            "Python",
-            "HTML",
-            "CSS",
-            "C++"
-        ];
-
-        defaultLanguages.forEach((language) => {
-            if (!(language in languageTotals)) {
-                languageTotals[language] = 0;
-            }
-        });
-
-        const languages = Object.entries(languageTotals)
-            .map(([name, total_seconds]) => ({
-                name,
-                total_seconds
+        const result = languages
+            .map((language) => ({
+                name: language.name,
+                total_seconds: language.total_seconds || 0
             }))
+            .filter((language) => language.name)
             .sort(
                 (a, b) =>
                     b.total_seconds - a.total_seconds
             );
 
         return res.status(200).json({
-            languages
+            languages: result
         });
 
     } catch (error) {

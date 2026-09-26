@@ -1,45 +1,37 @@
-export default async function handler(req, res) {
+async function loadWakaTimeLanguages() {
     try {
-        const apiKey = process.env.WAKATIME_API_KEY;
+        const response = await fetch("/api/wakatime-languages");
 
-        if (!apiKey) {
-            return res.status(500).json({
-                error: "WakaTime API key is not configured"
-            });
+        if (!response.ok) {
+            throw new Error("Failed to fetch WakaTime languages");
         }
-
-        const response = await fetch(
-            `https://api.wakatime.com/api/v1/users/current/summaries?range=last_7_days&api_key=${encodeURIComponent(apiKey)}`
-        );
 
         const data = await response.json();
 
-        if (!response.ok) {
-            return res.status(response.status).json({
-                error: "WakaTime rejected the request",
-                wakatime: data
-            });
-        }
+        const defaultLanguages = [
+            "JavaScript",
+            "Python",
+            "HTML",
+            "CSS",
+            "C++"
+        ];
 
-        const languageTotals = {};
+        const languageMap = {};
 
-        const days = data.data || [];
-
-        days.forEach((day) => {
-            const languages = day.languages || [];
-
-            languages.forEach((language) => {
-                const name = language.name;
-
-                if (!name) return;
-
-                languageTotals[name] =
-                    (languageTotals[name] || 0) +
-                    (language.total_seconds || 0);
-            });
+        // Add WakaTime data
+        (data.languages || []).forEach((language) => {
+            languageMap[language.name] = language.total_seconds;
         });
 
-        const languages = Object.entries(languageTotals)
+        // Make sure our default languages exist
+        defaultLanguages.forEach((language) => {
+            if (!(language in languageMap)) {
+                languageMap[language] = 0;
+            }
+        });
+
+        // Convert back to array and sort highest → lowest
+        const languages = Object.entries(languageMap)
             .map(([name, total_seconds]) => ({
                 name,
                 total_seconds
@@ -49,15 +41,69 @@ export default async function handler(req, res) {
                     b.total_seconds - a.total_seconds
             );
 
-        return res.status(200).json({
-            languages
+        const container =
+            document.querySelector(".coding-languages");
+
+        if (!container) return;
+
+        container
+            .querySelectorAll(".language-row")
+            .forEach(row => row.remove());
+
+        if (languages.length === 0) return;
+
+        const maxSeconds =
+            languages[0].total_seconds || 1;
+
+        languages.forEach((language) => {
+            const totalSeconds = language.total_seconds;
+
+            const hours =
+                Math.floor(totalSeconds / 3600);
+
+            const minutes =
+                Math.floor((totalSeconds % 3600) / 60);
+
+            let time;
+
+            if (hours > 0) {
+                time = `${hours}h ${minutes}m`;
+            } else if (minutes > 0) {
+                time = `${minutes}m`;
+            } else {
+                time = "<1m";
+            }
+
+            const percentage =
+                totalSeconds > 0
+                    ? (totalSeconds / maxSeconds) * 100
+                    : 0;
+
+            const row =
+                document.createElement("div");
+
+            row.className = "language-row";
+
+            row.innerHTML = `
+                <span>${language.name}</span>
+
+                <div class="language-bar">
+                    <div
+                        class="language-fill"
+                        style="width: ${percentage}%"
+                    ></div>
+                </div>
+
+                <small>${time}</small>
+            `;
+
+            container.appendChild(row);
         });
 
     } catch (error) {
-        console.error("WakaTime languages error:", error);
-
-        return res.status(500).json({
-            error: "Internal server error"
-        });
+        console.error(
+            "WakaTime languages error:",
+            error
+        );
     }
 }

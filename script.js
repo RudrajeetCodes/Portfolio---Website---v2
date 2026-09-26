@@ -1054,7 +1054,6 @@ async function loadWakaTime() {
     }
 }
 
-loadWakaTime();
 
 async function loadWakaTimeStatus() {
     try {
@@ -1082,7 +1081,13 @@ async function loadWakaTimeStatus() {
     }
 }
 
+loadWakaTime();
 loadWakaTimeStatus();
+
+setInterval(() => {
+    loadWakaTime();
+    loadWakaTimeStatus();
+}, 5000);
 
 const themeToggle = document.getElementById("theme-toggle");
 

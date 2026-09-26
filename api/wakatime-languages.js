@@ -8,37 +8,55 @@ export default async function handler(req, res) {
             });
         }
 
-        const response = await fetch(
-            `https://api.wakatime.com/api/v1/users/current/stats/last_7_days?api_key=${encodeURIComponent(apiKey)}`
-        );
+        const languageTotals = {};
 
-        const data = await response.json();
+        const today = new Date();
 
-        // WakaTime can return 202 while stats are being refreshed.
-        // Still return whatever language data is available.
-        if (response.status !== 200 && response.status !== 202) {
-            return res.status(response.status).json({
-                error: "WakaTime rejected the request",
-                wakatime: data
+        // Last 7 days
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+
+            const dateString = new Intl.DateTimeFormat("en-CA", {
+                timeZone: "Asia/Kolkata"
+            }).format(date);
+
+            const response = await fetch(
+                `https://api.wakatime.com/api/v1/users/current/durations?date=${dateString}&timezone=Asia/Kolkata&api_key=${encodeURIComponent(apiKey)}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                return res.status(response.status).json({
+                    error: "WakaTime rejected the request",
+                    wakatime: data
+                });
+            }
+
+            const durations = data.data || [];
+
+            durations.forEach((duration) => {
+                if (!duration.language) return;
+
+                languageTotals[duration.language] =
+                    (languageTotals[duration.language] || 0) +
+                    (duration.duration || 0);
             });
         }
 
-        const languages = data.data?.languages || [];
-
-        const result = languages
-            .map((language) => ({
-                name: language.name,
-                total_seconds: language.total_seconds || 0
+        const languages = Object.entries(languageTotals)
+            .map(([name, total_seconds]) => ({
+                name,
+                total_seconds
             }))
-            .filter((language) => language.name)
             .sort(
                 (a, b) =>
                     b.total_seconds - a.total_seconds
             );
 
         return res.status(200).json({
-            languages: result,
-            up_to_date: data.data?.is_up_to_date ?? true
+            languages
         });
 
     } catch (error) {

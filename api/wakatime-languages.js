@@ -22,7 +22,7 @@ export default async function handler(req, res) {
             }).format(date);
 
             const response = await fetch(
-                `https://api.wakatime.com/api/v1/users/current/durations?date=${dateString}&timezone=Asia/Kolkata&api_key=${encodeURIComponent(apiKey)}`
+                `https://api.wakatime.com/api/v1/users/current/durations?date=${dateString}&timezone=Asia/Kolkata&slice_by=language&api_key=${encodeURIComponent(apiKey)}`
             );
 
             const data = await response.json();

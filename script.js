@@ -1080,13 +1080,96 @@ async function loadWakaTimeStatus() {
     }
 }
 
+async function loadWakaTimeLanguages() {
+    try {
+        const response = await fetch("/api/wakatime-languages");
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch WakaTime languages");
+        }
+
+        const data = await response.json();
+        const languages = data.languages || [];
+
+        const container =
+            document.querySelector(".coding-languages");
+
+        if (!container) return;
+
+        const label =
+            container.querySelector(".activity-label");
+
+        // Remove existing language rows
+        container
+            .querySelectorAll(".language-row")
+            .forEach(row => row.remove());
+
+        if (languages.length === 0) return;
+
+        const maxSeconds =
+            languages[0].total_seconds || 1;
+
+        languages.forEach((language) => {
+            const totalSeconds = language.total_seconds;
+
+            const hours =
+                Math.floor(totalSeconds / 3600);
+
+            const minutes =
+                Math.floor((totalSeconds % 3600) / 60);
+
+            let time;
+
+            if (hours > 0) {
+                time = `${hours}h ${minutes}m`;
+            } else if (minutes > 0) {
+                time = `${minutes}m`;
+            } else {
+                time = "<1m";
+            }
+
+            const percentage =
+                (totalSeconds / maxSeconds) * 100;
+
+            const row = document.createElement("div");
+            row.className = "language-row";
+
+            row.innerHTML = `
+                <span>${language.name}</span>
+
+                <div class="language-bar">
+                    <div
+                        class="language-fill"
+                        style="width: ${percentage}%"
+                    ></div>
+                </div>
+
+                <small>${time}</small>
+            `;
+
+            container.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error(
+            "WakaTime languages error:",
+            error
+        );
+    }
+}
+
 loadWakaTime();
 loadWakaTimeStatus();
+loadWakaTimeLanguages();
 
 setInterval(() => {
     loadWakaTime();
     loadWakaTimeStatus();
 }, 30000);
+
+setInterval(() => {
+    loadWakaTimeLanguages();
+}, 60000);
 
 const themeToggle = document.getElementById("theme-toggle");
 

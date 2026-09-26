@@ -622,12 +622,28 @@ async function loadGithubActivity() {
             commitsTab.textContent = commits.length;
         }
 
-        // Latest 5 commits
-        const latestCommits =
-            commits.slice(0, 5);
+        // Show commits
+        const showMoreButton =
+            document.getElementById("github-show-more");
 
-        if (latestCommits.length === 0) {
-            activityList.innerHTML = `
+        let showingAll = false;
+
+        function renderCommits() {
+
+            const visibleCommits = showingAll
+                ? commits
+                : commits.slice(0, 5);
+
+            // Fade slightly while changing the list
+            activityList.style.opacity = "0";
+
+            setTimeout(() => {
+
+                activityList.innerHTML = "";
+
+                if (visibleCommits.length === 0) {
+
+                    activityList.innerHTML = `
                 <div class="github-activity-item">
                     <span class="github-activity-title">
                         No recent commits found
@@ -635,52 +651,94 @@ async function loadGithubActivity() {
                 </div>
             `;
 
-            return;
+                } else {
+
+                    visibleCommits.forEach((commit) => {
+
+                        const item =
+                            document.createElement("div");
+
+                        item.className =
+                            "github-activity-item";
+
+                        const message =
+                            commit.message.split("\n")[0];
+
+                        const date =
+                            new Date(commit.date);
+
+                        const formattedDate =
+                            date.toLocaleDateString(
+                                "en-US",
+                                {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric"
+                                }
+                            );
+
+                        item.innerHTML = `
+                    <span class="github-activity-icon">⌘</span>
+
+                    <span class="github-activity-title">
+                        ${message}
+                    </span>
+
+                    <span class="github-activity-repo">
+                        ${commit.repoName}
+                    </span>
+
+                    <span class="github-activity-date">
+                        ${formattedDate}
+                    </span>
+                `;
+
+                        activityList.appendChild(item);
+                    });
+                }
+
+                if (showMoreButton) {
+
+                    if (commits.length > 5) {
+
+                        showMoreButton.style.display =
+                            "block";
+
+                        showMoreButton.textContent =
+                            showingAll
+                                ? "Show less"
+                                : "Show all";
+
+                    } else {
+
+                        showMoreButton.style.display =
+                            "none";
+                    }
+                }
+
+                // Calculate new height
+                activityList.style.maxHeight =
+                    activityList.scrollHeight + "px";
+
+                requestAnimationFrame(() => {
+                    activityList.style.opacity = "1";
+                });
+
+            }, 120);
         }
 
-        latestCommits.forEach((commit) => {
+        if (showMoreButton) {
 
-            const item =
-                document.createElement("div");
+            showMoreButton.onclick = () => {
 
-            item.className =
-                "github-activity-item";
+                showingAll = !showingAll;
 
-            const message =
-                commit.message.split("\n")[0];
+                renderCommits();
+            };
+        }
 
-            const date =
-                new Date(commit.date);
-
-            const formattedDate =
-                date.toLocaleDateString(
-                    "en-US",
-                    {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric"
-                    }
-                );
-
-            item.innerHTML = `
-                <span class="github-activity-icon">⌘</span>
-
-                <span class="github-activity-title">
-                    ${message}
-                </span>
-
-                <span class="github-activity-repo">
-                    ${commit.repoName}
-                </span>
-
-                <span class="github-activity-date">
-                    ${formattedDate}
-                </span>
-            `;
-
-            activityList.appendChild(item);
-        });
-
+        renderCommits();
+        
     } catch (error) {
 
         console.error(

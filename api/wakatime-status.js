@@ -8,8 +8,12 @@ export default async function handler(req, res) {
             });
         }
 
+        const today = new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Asia/Kolkata"
+        }).format(new Date());
+
         const response = await fetch(
-            `https://api.wakatime.com/api/v1/users/current/heartbeats?date=${new Date().toISOString().slice(0, 10)}&api_key=${encodeURIComponent(apiKey)}`
+            `https://api.wakatime.com/api/v1/users/current/heartbeats?date=${today}&api_key=${encodeURIComponent(apiKey)}`
         );
 
         const data = await response.json();
@@ -27,15 +31,19 @@ export default async function handler(req, res) {
             return res.status(200).json({
                 active: false,
                 project: null,
-                language: null
+                language: null,
+                last_activity: null
             });
         }
 
         const latest = heartbeats.reduce((latest, heartbeat) => {
-            return heartbeat.time > latest.time ? heartbeat : latest;
+            return heartbeat.time > latest.time
+                ? heartbeat
+                : latest;
         });
 
         const lastActivity = latest.time * 1000;
+
         const minutesSinceActivity =
             (Date.now() - lastActivity) / 60000;
 

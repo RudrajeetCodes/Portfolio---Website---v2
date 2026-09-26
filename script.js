@@ -1072,7 +1072,7 @@ async function loadWakaTimeStatus() {
         if (data.active) {
             codingStatus.textContent = "🟢 ACTIVE";
         } else {
-            codingStatus.textContent = "⚫ INACTIVE";
+            codingStatus.textContent = "⚫ OFFLINE";
         }
 
     } catch (error) {
@@ -1165,7 +1165,7 @@ loadWakaTimeLanguages();
 setInterval(() => {
     loadWakaTime();
     loadWakaTimeStatus();
-}, 30000);
+}, 5000);
 
 setInterval(() => {
     loadWakaTimeLanguages();
